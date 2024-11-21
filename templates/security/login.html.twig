@@ -1,0 +1,182 @@
+<style>
+
+/* Custom CSS for centering the form and adding a frame */
+    .centered-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .form-frame {
+        position: center;
+        width: 50%;
+        height: 50%;
+        max-width: 400px;
+        padding: 30px;
+        border: 10px solid #ccc;
+        border-radius: 50px;
+        background-color: #f9f9f9;
+        position: relative; /* Set the container as a reference for positioning */
+    }
+
+    /* Add background image */
+    .centered-form {
+        background-image: url("{{asset('assettF/img/bg.png')}}");
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+     /* Custom styles for text fields */
+    .form-floating input[type="text"],
+    .form-floating input[type="email"],
+    .form-floating input[type="password"] {
+        /* Customize the border color */
+        border-color: #5a5a5a;
+        /* Optional: Change the font-size and color of the text */
+        font-size: 16px;
+        color: #333;
+    }
+
+    /* Customize the placeholder color */
+    .form-floating input::placeholder {
+        color: #888;
+    }
+
+    /* Optional: Adjust the focus and active states */
+    .form-floating input[type="text"]:focus,
+    .form-floating input[type="text"]:active,
+    .form-floating input[type="email"]:focus,
+    .form-floating input[type="email"]:active,
+    .form-floating input[type="password"]:focus,
+    .form-floating input[type="password"]:active {
+        border-color: #4285f4;
+        box-shadow: 0 0 0 0.2rem rgba(66, 133, 244, 0.25);
+    }
+
+    /* Optional: Customize the button style */
+    .btn-primary {
+        background-color: #4285f4;
+        border-color: #4285f4;
+    }
+
+    .form-floating input {
+    width: 100%;
+    border: 2px solid #999999;
+    border-radius: 8px;
+
+}
+
+/* Custom styles for the link */
+    .back-link {
+        color: red; /* Change the color to red */
+        text-decoration: none; /* Remove underline from the link */
+    }
+
+    /* Custom styles for the icon */
+    .back-icon {
+        font-weight: bold; /* Adjust font weight if needed */
+        vertical-align: middle; /* Align the icon vertically */
+    }
+
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+  }
+
+  li {
+    margin: 0 10px; /* Add margin to separate list items */
+  }
+
+  li a {
+    display: block;
+    color: white; /* Change the color to red */
+    text-align: center;
+    padding: 10px 20px; /* Adjust padding as needed */
+    text-decoration: none;
+    font-size: 18px;
+  }
+
+  li a:hover:not(.active) {
+    background-color: transparent;
+  }
+
+  .active {
+    background-color: red; /* Change the background color to red */
+  }
+</style>
+
+
+
+<div class="centered-form">
+    <div class="form-frame">
+    
+    <a href="{{ path('app_acceuil') }}" class="back-link">
+        <span class="back-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M11.354 3.354a.5.5 0 0 0-.708-.708L4.293 8l6.353 6.354a.5.5 0 0 0 .708-.708L5.207 8l6.147-6.146a.5.5 0 0 0 0-.708z"/>
+        </svg>
+    </span>
+</a>
+
+<center>
+<ul>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li><a class="active" href="/login">Client</a></li>
+  <li><a class="active" href="/registerr">Coach</a></li>
+</ul>
+
+        <h2 class="text-center mb-4">Sign In</h2>
+</center>
+{% block body %}
+<form method="post">
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    {% if app.user %}
+        <div class="mb-3">
+            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+        </div>
+    {% endif %}
+
+    <h1 class="h3 mb-3 font-weight-normal"></h1>
+    <div class="form-floating mb-3">
+    <label for="inputEmail">Email</label>
+    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+    </div>
+    <div class="form-floating mb-3">
+    <label for="inputPassword">Password</label>
+    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+    </div>
+    <input type="hidden" name="_csrf_token"
+           value="{{ csrf_token('authenticate') }}"
+    >
+
+    {#
+        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+        See https://symfony.com/doc/current/security/remember_me.html
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" name="_remember_me"> Remember me
+            </label>
+        </div>
+    #}
+ <a href="reset-password">Forgot Password</a>
+    <button class="btn btn-lg btn-primary" type="submit">
+        Sign in
+    </button>
+
+<br>
+<a>You don't have an Account?</a>
+    <a href="{{ path('app_register') }}">Sign up</a>
+</form>
+</div>
+{% endblock %}

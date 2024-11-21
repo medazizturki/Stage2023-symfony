@@ -1,0 +1,66 @@
+    {% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+    <style>
+        .custom-label {
+            position: relative;
+        }
+
+        .custom-label-left {
+            left: -190px;
+        }
+
+        .custom-label-left2 {
+            left: -200px;
+        }
+
+        .custom-label-left3 {
+            left: -200px;
+        }
+
+        .custom-label-left4 {
+            left: -165px;
+        }
+
+        .custom-label-left5 {
+            left: -180px;
+        }
+        
+    </style>
+
+
+
+
+
+    {{ form_start(form, {'enctype': 'multipart/form-data'}) }}
+
+
+        <div class="form-group">
+            <label for="{{ form.image.vars.id }}" class="custom-label custom-label-left">image</label>
+            {{ form_widget(form.image, {'attr': {'class': 'custom-input'}, 'name': 'produit[image]'}) }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.nom.vars.id }}" class="custom-label custom-label-left2">nom</label>
+            {{ form_widget(form.nom, {'attr': {'class': 'custom-input'}}) }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.prix.vars.id }}" class="custom-label custom-label-left3">prix</label>
+            {{ form_widget(form.prix, {'attr': {'class': 'custom-input'}}) }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.datepost.vars.id }}" class="custom-label custom-label-left5">datepost</label>
+            <div class="custom-inline-checkbox">
+                {% for choice in form.datepost %}
+                    <div class="form-check form-check-inline">
+                        {{ form_widget(choice, {'attr': {'class': 'form-check-input5'}}) }}
+                    </div>
+                {% endfor %}    
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="{{ form.detail.vars.id }}" class="custom-label custom-label-left">detail</label>
+            {{ form_widget(form.detail, {'attr': {'class': 'custom-input'}}) }}
+        </div>
+        
+        <button type="submit" id="saveButton" class="custom-button">Enregistrer</button>
+    {{ form_end(form) }}

@@ -1,0 +1,17 @@
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}New produit{% endblock %}
+
+{% block body %}
+
+    <form action="{{ path('app_produit_new') }}" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to add this produit?')">
+ 
+  <!-- <img id="popup-image" src="{{ asset('uploads/' ~ produit.image) }}" style="width: 100px; height: 100px;" alt=""/> -->
+
+    {{ include('produit/_form.html.twig') }}
+
+</form>
+
+
+{% endblock %}

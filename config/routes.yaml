@@ -1,0 +1,8 @@
+# routes.yaml
+app_user_edit:
+    path: '/user/{id}/edit'
+    controller: App\Controller\UserController::edit
+    methods: ['GET', 'POST']
+fetch_product_details:
+    path: '/fetch-product-details/{id}'
+    controller: 'App\Controller\ProductController::fetchProductDetails'

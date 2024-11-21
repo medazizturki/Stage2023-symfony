@@ -1,0 +1,15 @@
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}New User{% endblock %}
+
+{% block body %}
+
+    <form action="{{ path('app_user_new') }}" method="post" onsubmit="return confirm('Are you sure you want to add this user?')">
+ 
+    {{ include('user/_form.html.twig') }}
+
+</form>
+
+
+{% endblock %}

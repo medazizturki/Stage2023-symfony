@@ -1,0 +1,13 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Evenement{% endblock %}
+
+{% block body %}
+
+    <form action="{{ path('app_produit_edit', {'id': produit.id}) }}" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to update this produit?')">
+
+    {{ include('produit/_form.html.twig', {'button_label': 'Update'}) }}
+    
+
+{% endblock %}

@@ -1,0 +1,242 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Produits{% endblock %}
+{% block stylesheets %}
+<style>
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination a {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 0 5px;
+  background-color: #e9e9e9;
+  color: #333;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.pagination a.active {
+  background-color: #333;
+  color: #fff;
+}
+
+.inline-field {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.custom-button {  
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.custom-label {
+  margin-left: -10px;
+}
+
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #000;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 100px;
+  text-decoration: none;
+}
+
+li a:hover:not(.active) {
+  background-color: #111;
+}
+
+.active {
+  background-color: #04AA6D;
+}
+</style>
+
+
+{% endblock %}
+
+{% block body %}
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" integrity="sha512-XXXXX" crossorigin="anonymous" />
+  <link rel="stylesheet" href="{{ asset('assettB/css/style.css') }}">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+
+</head>
+<body>
+<center>
+  <h2>Liste des Produits</h2>
+</center>
+
+
+<ul>
+  <li><a href="/coach/">coach</a></li>  
+  <li><a href="/user/">User</a></li>
+  <li><a class="active" href="/produit/">Produit</a></li>
+</ul>
+
+
+ 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <br>
+  <button class="bouton-vert custom-button" id="addproduit">AJOUTER</button>
+  <br>
+  <br>
+
+
+<script>
+  // Attendre que le document soit chargé avant d'exécuter le code
+$(document).ready(function() {
+
+  // Lorsque le bouton ayant l'ID 'addproduit' est cliqué
+  $('#addproduit').click(function(e) {
+    e.preventDefault(); // Empêche le comportement par défaut du bouton (pour éviter un rechargement de la page)
+
+    // Effectuer une requête AJAX
+    $.ajax({
+      url: '{{ path('app_produit_new') }}', // URL de l'action Symfony pour afficher le formulaire d'ajout
+      type: 'POST', // Utiliser la méthode POST pour la requête
+      success: function(response) { // Fonction exécutée en cas de succès de la requête
+
+        // Afficher une boîte de dialogue modale (Swal) avec le contenu HTML reçu dans la réponse
+        Swal.fire({
+          title: 'Ajouter un produit', // Titre de la boîte de dialogue
+          html: response, // Contenu HTML du formulaire reçu en réponse
+          showCloseButton: true, // Afficher un bouton de fermeture
+          showCancelButton: false, // Ne pas afficher de bouton d'annulation
+          showConfirmButton: false, // Ne pas afficher de bouton de confirmation
+          onOpen: () => {
+            // Ajouter un gestionnaire d'événements pour la soumission du formulaire (à l'intérieur de la boîte modale)
+            $('#produitForm').submit(function(e) {
+              e.preventDefault(); // Empêcher le comportement de soumission par défaut du formulaire
+            });
+          }
+        });
+      },
+      error: function() { // Fonction exécutée en cas d'erreur de la requête
+        Swal.fire('Error', 'Une erreur s\'est produite lors du chargement du formulaire.', 'error'); // Afficher une boîte modale d'erreur
+      }
+    });
+  });
+
+  // Lorsque n'importe quel élément avec la classe 'edit-button' est cliqué
+  $('.edit-button').click(function() {
+    var produitId = $(this).data('produit-id'); // Récupérer l'attribut personnalisé 'data-produit-id' de l'élément cliqué (contient l'ID du produit)
+    var imageUrl = $(this).data('image'); // Récupérer l'attribut personnalisé 'data-image' de l'élément cliqué (contient l'URL de l'image)
+    var url = '{{ path('app_produit_edit', {'id': 'ID_PLACEHOLDER'}) }}'.replace('ID_PLACEHOLDER', produitId); // Construire l'URL de l'action Symfony pour l'édition du produit en remplaçant 'ID_PLACEHOLDER' par l'ID du produit
+
+    openPopup(url); // Appeler une fonction (non définie dans ce code) pour ouvrir une fenêtre modale avec l'URL générée
+  });
+});
+
+
+  function openPopup(url, imageUrl) {
+          // Effectuer une requête AJAX
+            $.ajax({
+              url: url, // L'URL de l'action Symfony pour afficher le formulaire d'édition du produit
+              success: function(response) { // Fonction exécutée en cas de succès de la requête
+
+                // Afficher une boîte de dialogue modale (Swal) avec le contenu HTML reçu dans la réponse
+                Swal.fire({
+                  title: 'Modifier un produit', // Titre de la boîte de dialogue
+                  html: response, // Contenu HTML du formulaire reçu en réponse
+                  showCloseButton: true, // Afficher un bouton de fermeture
+                  showCancelButton: false, // Ne pas afficher de bouton d'annulation
+                  showConfirmButton: false, // Ne pas afficher de bouton de confirmation
+                  onOpen: () => {
+                    // Insérer l'URL de l'image dans le formulaire de la fenêtre modale
+                    $('#produitForm img#popup-image').attr('src', imageUrl);
+
+                    // Ajouter un gestionnaire d'événements pour la soumission du formulaire (à l'intérieur de la boîte modale)
+                    $('#produitForm').submit(function(e) {
+                      e.preventDefault(); // Empêcher le comportement de soumission par défaut du formulaire
+                      // Le reste du code à l'intérieur de cette fonction n'est pas inclus ici, car il a été tronqué dans le code précédent.
+                      // Il peut inclure des actions pour collecter les données du formulaire et les envoyer au serveur pour la mise à jour du produit.
+                    });
+                  }
+                });
+              },
+              error: function() { // Fonction exécutée en cas d'erreur de la requête
+                Swal.fire('Error', 'Une erreur s\'est produite lors du chargement du formulaire.', 'error'); // Afficher une boîte modale d'erreur
+              }
+            });
+}
+
+
+
+</script>
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>image</th>
+      <th><a href="{{ path('app_produit_index', {'sort': 'nom'}) }}">Nom</a></th>
+      <th>prix</th>
+      <th>date post</th>
+      <th>detail</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for produit in produits %}
+    <tr>
+      <td>{{ produit.id }}</td>
+      <td><img src="{{ asset('uploads/' ~ produit.image) }}" style=" width:100px; height:100px; " alt=""/></td>
+      <td>{{ produit.nom }}</td>
+      <td>{{ produit.prix }}</td>
+      <td>{{ produit.datepost ? produit.datepost|date('d-m-Y') : '' }}</td>
+      <td>{{ produit.detail }}</td>        
+      <td>
+        <button style="background-color: #87CCEE; color: white; padding: 5px 10px; text-decoration: none;" class="edit-button" data-produit-id="{{ produit.id }}" data-image="{{ asset('uploads/' ~ produit.image) }}">Modifier</button>
+      </td>
+      <td>
+        {{ include('produit/_delete_form.html.twig') }}
+      </td>
+    </tr>
+      {% else %}
+      <tr>
+        <td colspan="5">no records found</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+</table>
+
+
+
+<center>
+  <div class="pagination">
+    {{ knp_pagination_render(produits) }}
+  </div>
+</center>
+</body>
+</html>
+{% endblock %}

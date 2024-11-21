@@ -1,0 +1,59 @@
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+<style>
+
+    
+</style>
+
+
+
+
+
+{{ form_start(form) }}
+    <div class="form-group">
+        <label for="{{ form.nom.vars.id }}" class="custom-label custom-label-left">Nom</label>
+        {{ form_widget(form.nom, {'attr': {'class': 'custom-input'}}) }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.prenom.vars.id }}" class="custom-label custom-label-left2">Prénom</label>
+        {{ form_widget(form.prenom, {'attr': {'class': 'custom-input'}}) }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.sexe.vars.id }}" class="custom-label custom-label-left3">Sexe</label>
+        {{ form_widget(form.sexe, {'attr': {'class': 'custom-input'}}) }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.age.vars.id }}" class="custom-label custom-label-left">Âge</label>
+        {{ form_widget(form.age, {'attr': {'class': 'custom-input'}}) }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.contrat.vars.id }}" class="custom-label custom-label-left4">contrat</label>
+        <div class="custom-inline-checkbox">
+            {% for choice in form.contrat %}
+                <div class="form-check form-check-inline">
+                    {{ form_widget(choice, {'attr': {'class': 'form-check-input'}}) }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="{{ form.datedebut.vars.id }}" class="custom-label custom-label-left5">datedebut</label>
+        <div class="custom-inline-checkbox">
+            {% for choice in form.datedebut %}
+                <div class="form-check form-check-inline">
+                    {{ form_widget(choice, {'attr': {'class': 'form-check-input5'}}) }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="{{ form.email.vars.id }}" class="custom-label custom-label-left">Email</label>
+        {{ form_widget(form.email, {'attr': {'class': 'custom-input'}}) }}
+    </div>
+    <div class="form-group">
+        <label for="{{ form.roles.vars.id }}" class="custom-label custom-label-left">Rôles</label>
+        {{ form_widget(form.roles, {'attr': {'class': 'custom-input'}}) }}
+    </div>
+    
+    <button type="submit" id="saveButton" class="custom-button">Enregistrer</button>
+{{ form_end(form) }}

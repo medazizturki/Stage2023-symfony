@@ -1,0 +1,299 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Utilisateurs{% endblock %}
+{% block stylesheets %}
+<style>
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination a {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 0 5px;
+  background-color: #e9e9e9;
+  color: #333;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.pagination a.active {
+  background-color: #333;
+  color: #fff;
+}
+
+.inline-field {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+
+.custom-button {  
+  background-color: green;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+
+.custom-label {
+  margin-left: -10px;
+}
+
+
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 100px;
+  text-decoration: none;
+}
+
+li a:hover:not(.active) {
+  background-color: #111;
+}
+
+.active {
+  background-color: #04AA6D;
+}
+</style>
+
+
+
+{% endblock %}
+
+{% block body %}
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.2.1/dist/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" integrity="sha512-XXXXX" crossorigin="anonymous" />
+  <link rel="stylesheet" href="{{ asset('assettB/css/style.css') }}">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+
+
+<style>
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 100px;
+  text-decoration: none;
+}
+
+li a:hover:not(.active) {
+  background-color: #111;
+}
+
+.active {
+  background-color: #04AA6D;
+}
+</style>
+
+
+
+</head>
+<body>
+<center>
+  <h2>Liste des Utilisateurs</h2>
+
+  <ul>
+  <li><a href="/coach/">coach</a></li>
+  <li><a class="active" href="/user/">User</a></li>
+  <li><a href="/produit/">Produit</a></li>
+</ul>
+
+</center>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <br>
+  <button class="bouton-vert custom-button" id="addUser">AJOUTER</button>
+  <br>
+  <br>
+
+
+<script>
+  $(document).ready(function() {
+    $('#addUser').click(function(e) {
+      e.preventDefault(); // Prevent the default behavior of the button
+
+      $.ajax({
+        url: '{{ path('app_user_new') }}', // URL of your Symfony action to display the add form
+        type: 'GET',
+        success: function(response) {
+          Swal.fire({
+            title: 'Ajouter un utilisateur',
+            html: response, // HTML content of the form
+            showCloseButton: true,
+            showCancelButton: false,
+            showConfirmButton: false,
+            onOpen: () => {
+              // Ajouter un gestionnaire d'événements pour la soumission du formulaire
+              $('#userForm').submit(function(e) {
+                e.preventDefault(); // Empêcher le comportement de soumission par défaut
+
+                // Récupérer les données du formulaire
+                var formData = $(this).serialize();
+
+                // Envoyer les données au serveur pour enregistrement
+                $.ajax({
+                  url: '{{ path('app_user_edit', {'id': 'ID_PLACEHOLDER'}) }}'.replace('ID_PLACEHOLDER', userId),
+                  type: 'POST',
+                  data: formData,
+                  success: function() {
+                    Swal.fire('Success', 'User details updated!', 'success');
+                    location.reload(); // Recharger la page pour afficher les mises à jour
+                  },
+                  error: function() {
+                    Swal.fire('Error', 'An error occurred while updating user details.', 'error');
+                  }
+                });
+              });
+            }
+          });
+        },
+        error: function() {
+          Swal.fire('Error', 'An error occurred while loading the form.', 'error');
+        }
+      });
+    });
+
+    $('.edit-button').click(function() {
+      var userId = $(this).data('user-id');
+      var url = '{{ path('app_user_edit', {'id': 'ID_PLACEHOLDER'}) }}'.replace('ID_PLACEHOLDER', userId);
+      openPopup(url);
+    });
+  });
+
+  function openPopup(url) {
+  $.ajax({
+    url: url,
+    success: function(response) {
+      Swal.fire({
+        title: 'Modifier un utilisateur',
+        html: response, // HTML content of the form
+        showCloseButton: true,
+        showCancelButton: false, // Remove the Cancel button
+        showConfirmButton: false, // Remove the Save button
+        onOpen: () => {
+          // Ajouter un gestionnaire d'événements pour la soumission du formulaire
+          $('#userForm').submit(function(e) {
+            e.preventDefault(); // Empêcher le comportement de soumission par défaut
+
+            // Récupérer les données du formulaire
+            var formData = $(this).serialize();
+
+            // Envoyer les données au serveur pour enregistrement
+            $.ajax({
+              url: '{{ path('app_user_edit', {'id': 'ID_PLACEHOLDER'}) }}'.replace('ID_PLACEHOLDER', userId),
+              type: 'POST',
+              data: formData,
+              success: function() {
+                Swal.fire('Success', 'User details updated!', 'success');
+                location.reload(); // Recharger la page pour afficher les mises à jour
+              },
+              error: function() {
+                Swal.fire('Error', 'An error occurred while updating user details.', 'error');
+              }
+            });
+          });
+        }
+      });
+    },
+    error: function() {
+      Swal.fire('Error', 'An error occurred while loading the form.', 'error');
+    }
+  });
+}
+
+</script>
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th><a href="{{ path('app_user_index', {'sort': 'nom'}) }}">Nom</a></th>
+      <th>Prenom</th>
+      <th>Sexe</th>
+      <th>Age</th>
+      <th>Abonnement (Months)</th>
+      <th>date debut</th>
+      <th>date fin</th>
+      <th>Email</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+    <tr>
+      <td>{{ user.id }}</td>
+      <td>{{ user.nom }}</td>
+      <td>{{ user.prenom }}</td>
+      <td>{{ user.sexe }}</td>
+      <td>{{ user.age }}</td>
+      <td>{{ user.abonnement }}</td>
+      <td>{{ user.datedebut ? user.datedebut|date('d-m-Y') : '' }}</td>
+      <td>{{ user.datefin ? user.datefin|date('d-m-Y') : '' }}</td>
+      <td>{{ user.email }}</td>
+        
+        <td>
+          <button style="background-color: #87CCEE; color: white; padding: 5px 10px; text-decoration: none;" class="edit-button" data-user-id="{{ user.id }}">Modifier</button>
+        </td>
+        <td>
+          {{ include('user/_delete_form.html.twig') }}
+        </td>
+      </tr>
+      {% else %}
+      <tr>
+        <td colspan="5">no records found</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+</table>
+
+<center>
+  <div class="pagination">
+    {{ knp_pagination_render(users) }}
+  </div>
+</center>
+
+</body>
+</html>
+{% endblock %}
+
+
+

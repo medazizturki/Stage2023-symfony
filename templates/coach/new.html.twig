@@ -1,0 +1,15 @@
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}New coach{% endblock %}
+
+{% block body %}
+
+    <form action="{{ path('app_coach_new') }}" method="post" enctype="multipart/form-data" >
+ 
+    {{ include('coach/_form.html.twig') }}
+
+</form>
+
+
+{% endblock %}
